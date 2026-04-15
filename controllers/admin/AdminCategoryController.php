@@ -15,6 +15,52 @@ class AdminCategoryController
         $view = 'categories/index';
         require_once PATH_VIEW_ADMIN . 'main.php';
     }
+
+    public function create(){
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $name = trim($_POST['name'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+
+            $this->categoryModel->insert($name, $description);
+
+            header('Location:' . BASE_URL_ADMIN . '&action=categories');
+            exit();
+        }
+        $title = 'Thêm danh mục mới';
+        $view = 'categories/create';
+        require_once PATH_VIEW_ADMIN . 'main.php';
+    }
+
+    public function edit(){
+        $id = $_GET['id'] ?? 0;
+
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $name = trim($_POST['name'] ?? '');
+            $description = trim($_POST['description'] ?? '');
+
+            $this->categoryModel->update($id, $name, $description);
+
+            header('Location:' . BASE_URL_ADMIN . '&action=categories');
+            exit();
+        }
+
+        $category = $this->categoryModel->getById($id);
+
+        $title = 'Sửa danh mục';
+        $view = 'categories/edit';
+
+        require_once PATH_VIEW_ADMIN . 'main.php';
+    }
+
+    public function delete(){
+        $id = $_GET['id'] ?? 0;
+        if($id){
+            $this->categoryModel->delete($id);
+        }
+
+        header('Location:' . BASE_URL_ADMIN . '&action=categories');
+        exit();
+    }
 }
 
 ?>
