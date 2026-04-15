@@ -23,6 +23,7 @@ class AdminCategoryController
 
             $this->categoryModel->insert($name, $description);
 
+            $_SESSION['success'] = 'Thêm danh mục thành công!';
             header('Location:' . BASE_URL_ADMIN . '&action=categories');
             exit();
         }
@@ -40,6 +41,7 @@ class AdminCategoryController
 
             $this->categoryModel->update($id, $name, $description);
 
+            $_SESSION['success'] = 'Cập nhật danh mục thành công!';
             header('Location:' . BASE_URL_ADMIN . '&action=categories');
             exit();
         }
@@ -56,8 +58,9 @@ class AdminCategoryController
         $id = $_GET['id'] ?? 0;
         if($id){
             $this->categoryModel->delete($id);
+            $_SESSION['success'] = 'Xóa danh mục thành công!';
         }
-
+        
         header('Location:' . BASE_URL_ADMIN . '&action=categories');
         exit();
     }
