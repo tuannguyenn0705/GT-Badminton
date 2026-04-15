@@ -10,4 +10,7 @@ match ($action) {
     
     // Xử lý đăng xuất
     'logout'    => (new AuthController)->logout(),
+
+    // Xử lý đăng ký
+    'register'  => ($_SERVER['REQUEST_METHOD'] === 'POST') ? (new AuthController)->register() : (new AuthController)->showRegister(),
 };

@@ -50,7 +50,35 @@ class AuthController
     public function showRegister()
     {
         require_once PATH_VIEW_CLIENT . 'register.php';
-    }   
+    }
+
+    public function register(){
+        if($_SERVER['REQUEST_METHOD'] === 'POST'){
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
+            $password = ($_POST['password'] ?? '');
+            $confirm_password = ($_POST['confirm_password'] ?? '');
+        }
+
+        if ($password !== $confirm_password) {
+            $error = "Mật khẩu xác nhận không khớp!";
+            require_once PATH_VIEW_CLIENT . 'register.php';
+            return; // Dừng lại không làm tiếp
+        }
+
+        // Kiểm tra email tồn tại chưa
+        $existUser = $this->userModel->getUserByEmail($email);
+            if ($existUser) {
+                $error = "Email này đã được sử dụng. Vui lòng chọn email khác!";
+                require_once PATH_VIEW_CLIENT . 'register.php';
+                return;
+            }
+
+        $this->userModel->insertUser($username, $email, $password);
+
+        header('Location: ' . BASE_URL . '?action=login&msg=registered');
+        exit();
+    }
 
     // Xử lý logic đăng xuất
     public function logout()
