@@ -3,5 +3,6 @@
 $action = $_GET['action'] ?? '/';
 
 match ($action) {
-    '/'         => (new HomeController)->index(),
+    '/'          => (new AdminHomeController)->index(),
+    'categories' => (new AdminCategoryController)->index(),
 };

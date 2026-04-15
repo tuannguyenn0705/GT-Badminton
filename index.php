@@ -25,7 +25,7 @@ require_once './configs/helper.php';
 
 // Điều hướng
 $mode = $_GET['mode'] ?? 'client';
-if($mode == 'client'){
+if($mode === 'client'){
     // require điều hướng của client
     require_once './routes/client/index.php';
 }else{
