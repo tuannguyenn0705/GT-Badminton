@@ -12,7 +12,7 @@ define('PATH_VIEW_MAIN_CLIENT',    PATH_ROOT . 'views/client/main.php');
 define('PATH_VIEW_MAIN_ADMIN',    PATH_ROOT . 'views/admin/main.php');
 
 define('BASE_ASSETS_UPLOADS',   BASE_URL . 'assets/uploads/');
-define('BASE_ASSETS_UPLOADS_PRODUCT',   BASE_URL . 'assets/uploads/products/');
+define('BASE_ASSETS_UPLOADS_PRODUCT', BASE_URL . 'assets/uploads/');
 
 define('PATH_ASSETS_UPLOADS',   PATH_ROOT . 'assets/uploads/');
 
