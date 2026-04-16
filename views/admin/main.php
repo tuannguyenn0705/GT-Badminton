@@ -4,20 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title><?= $title ?? 'Home' ?></title>
-
-    <!-- Latest compiled and minified CSS -->
+    <title><?= $title ?? 'Admin Dashboard' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-xxl bg-light justify-content-center">
-    <ul class="navbar-nav gap-3">
+        <ul class="navbar-nav gap-3">
             <li class="nav-item">
                 <a class="nav-link text-uppercase" href="<?= BASE_URL_ADMIN ?>"><b>Dashboard</b></a>
             </li>
@@ -34,7 +29,7 @@
     </nav>
 
     <div class="container">
-        <h1 class="mt-3 mb-3"><?= $title ?? 'Home' ?></h1>
+        <h1 class="mt-3 mb-3"><?= $title ?? 'Dashboard' ?></h1>
 
         <?php if (isset($_SESSION['success'])): ?>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -51,7 +46,6 @@
             </div>
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
-
         <div class="row">
             <?php
             if (isset($view)) {
@@ -62,5 +56,4 @@
     </div>
 
 </body>
-
 </html>
