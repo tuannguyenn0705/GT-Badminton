@@ -15,4 +15,8 @@ match ($action) {
 
     'product-edit'   => (new AdminProductController)->edit(),
     'product-delete' => (new AdminProductController)->delete(),
+
+    'users'       => (new AdminUserController())->index(),
+    'user-toggle' => (new AdminUserController())->toggleStatus(),
+    'user-delete' => (new AdminUserController())->delete(),
 };

@@ -24,6 +24,13 @@ class AuthController
 
             if ($user && $user['password'] === $password) {
                 
+                // CHỈ THÊM ĐÚNG ĐOẠN NÀY: Kiểm tra tài khoản có bị khóa không
+                if (isset($user['status']) && $user['status'] == 0) {
+                    $error = "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ Admin.";
+                    require_once PATH_VIEW_CLIENT . 'login.php';
+                    return; // Dừng lại, không cho đăng nhập
+                }
+
                 // Đăng nhập thành công -> Lưu thông tin vào Session
                 $_SESSION['user'] = [
                     'id' => $user['id'],
@@ -34,13 +41,12 @@ class AuthController
 
                 // Phân quyền điều hướng
                 if ($user['is_admin'] == 1) {
-                    header('Location: ' . BASE_URL_ADMIN); // Vô trang quản trị
+                    header('Location: ' . BASE_URL_ADMIN); 
                 } else {
-                    header('Location: ' . BASE_URL); // Vô trang chủ
+                    header('Location: ' . BASE_URL); 
                 }
                 exit();
             } else {
-                // Đăng nhập thất bại -> Báo lỗi
                 $error = "Email hoặc mật khẩu không chính xác!";
                 require_once PATH_VIEW_CLIENT . 'login.php';
             }
@@ -63,16 +69,15 @@ class AuthController
         if ($password !== $confirm_password) {
             $error = "Mật khẩu xác nhận không khớp!";
             require_once PATH_VIEW_CLIENT . 'register.php';
-            return; // Dừng lại không làm tiếp
+            return; 
         }
 
-        // Kiểm tra email tồn tại chưa
         $existUser = $this->userModel->getUserByEmail($email);
-            if ($existUser) {
-                $error = "Email này đã được sử dụng. Vui lòng chọn email khác!";
-                require_once PATH_VIEW_CLIENT . 'register.php';
-                return;
-            }
+        if ($existUser) {
+            $error = "Email này đã được sử dụng. Vui lòng chọn email khác!";
+            require_once PATH_VIEW_CLIENT . 'register.php';
+            return;
+        }
 
         $this->userModel->insertUser($username, $email, $password);
 
@@ -80,7 +85,6 @@ class AuthController
         exit();
     }
 
-    // Xử lý logic đăng xuất
     public function logout()
     {
         session_unset();
