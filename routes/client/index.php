@@ -4,6 +4,7 @@ $action = $_GET['action'] ?? '/';
 
 match ($action) {
     '/'         => (new HomeController)->index(),
+    'detail' => (new HomeController())->detail(),
     
     // Xử lý đăng nhập
     'login'     => ($_SERVER['REQUEST_METHOD'] === 'POST') ? (new AuthController)->login() : (new AuthController)->showLogin(),

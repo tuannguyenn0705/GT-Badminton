@@ -41,5 +41,23 @@ class HomeController
         
         require_once PATH_VIEW_CLIENT . 'main.php'; 
     }
+
+    public function detail()
+    {
+        $id = $_GET['id'] ?? 0;
+        $product = $this->productModel->getById($id);
+
+        if (!$product) {
+            header('Location: ' . BASE_URL);
+            exit();
+        }
+
+        // Lấy các sản phẩm cùng danh mục để làm "Sản phẩm liên quan"
+        $relatedProducts = $this->productModel->getProductsFiltered($product['category_id']);
+        
+        $title = $product['name'] . ' - GT Badminton';
+        $view = 'detail';
+        require_once PATH_VIEW_CLIENT . 'main.php';
+    }
 }
 ?>
