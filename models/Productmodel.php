@@ -84,6 +84,26 @@ class ProductModel extends BaseModel{
         return $stmt->execute(['id' => $id]);
     }
 
+    // Lấy thông tin 1 danh mục
+    public function getCategoryById($id) {
+        $sql = "SELECT * FROM categories WHERE id = :id";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch();
+    }
+
+    // Lấy tất cả sản phẩm thuộc 1 danh mục
+    public function getProductsByCategory($category_id) {
+        $sql = "SELECT p.*, pi.image_url 
+                FROM products p 
+                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = 1
+                WHERE p.category_id = :category_id
+                ORDER BY p.id DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['category_id' => $category_id]);
+        return $stmt->fetchAll();
+    }
+
 }
 
 ?>
