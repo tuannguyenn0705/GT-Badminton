@@ -20,4 +20,5 @@ match ($action) {
     'add-to-cart' => (new CartController())->add(),
     'view-cart'   => (new CartController())->view(),
     'delete-cart' => (new CartController())->delete(),
+    'update-cart' => (new CartController())->update(),
 };

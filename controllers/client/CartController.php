@@ -82,5 +82,24 @@ class CartController
         exit();
     }
 
+    public function update()
+    {
+        $this->checkLogin(); // Chặn bảo mật
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quantities'])) {
+            // Duyệt qua mảng số lượng gửi lên
+            foreach ($_POST['quantities'] as $id => $qty) {
+                $qty = (int)$qty;
+                // Đảm bảo số lượng lớn hơn 0 và sản phẩm có trong giỏ
+                if ($qty > 0 && isset($_SESSION['cart'][$id])) {
+                    $_SESSION['cart'][$id]['quantity'] = $qty;
+                }
+            }
+            $_SESSION['success'] = "Đã cập nhật số lượng sản phẩm!";
+        }
+        
+        header('Location: ' . BASE_URL . '?action=view-cart');
+        exit();
+    }
 }
 ?>
