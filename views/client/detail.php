@@ -91,7 +91,7 @@
                     <button class="nav-link fw-bold px-4 py-3 text-uppercase" data-bs-toggle="tab" data-bs-target="#spec" type="button">Thông số kỹ thuật</button>
                 </li>
             </ul>
-            <div class="tab-content bg-white p-4 rounded shadow-sm border">
+            <div class="tab-content bg-white p-4 rounded shadow-sm border mb-5">
                 <div class="tab-pane fade show active" id="desc">
                     <div class="lh-lg text-muted">
                         <?= nl2br($product['description'] ?? 'Đang cập nhật nội dung mô tả chi tiết cho sản phẩm này...') ?>
@@ -104,6 +104,49 @@
                         <tr class="bg-light"><th>Sức căng tối đa</th><td>28 - 30 lbs</td></tr>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 p-4 bg-white rounded shadow-sm border mb-5">
+        <h4 class="fw-bold mb-4"><i class="fa-solid fa-comments text-danger"></i> Bình luận sản phẩm</h4>
+
+        <div class="row">
+            <div class="col-lg-7 border-end">
+                <?php if (empty($comments)): ?>
+                    <p class="text-muted fst-italic">Chưa có bình luận nào. Hãy để lại ý kiến của bạn!</p>
+                <?php else: ?>
+                    <div class="comment-list" style="max-height: 400px; overflow-y: auto;">
+                        <?php foreach ($comments as $com): ?>
+                            <div class="mb-4 pb-3 border-bottom pe-2">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <strong class="text-dark"><i class="fa-solid fa-user-circle me-1"></i> <?= $com['username'] ?></strong>
+                                    <small class="text-muted" style="font-size: 0.75rem;"><?= date('d/m/Y H:i', strtotime($com['created_at'])) ?></small>
+                                </div>
+                                <p class="mb-0 text-muted small" style="line-height: 1.6;"><?= nl2br(htmlspecialchars($com['content'])) ?></p>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="col-lg-5 ps-lg-4">
+                <h5 class="fw-bold mb-3">Gửi bình luận của bạn</h5>
+                <?php if (!isset($_SESSION['user'])): ?>
+                    <div class="alert alert-light border small text-center">
+                        Vui lòng <a href="<?= BASE_URL ?>?action=login" class="text-danger fw-bold text-decoration-none">Đăng nhập</a> để tham gia thảo luận.
+                    </div>
+                <?php else: ?>
+                    <form action="<?= BASE_URL ?>?action=add-comment" method="POST">
+                        <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                        <div class="mb-3">
+                            <textarea class="form-control shadow-sm" name="content" rows="4" placeholder="Nhập nội dung bình luận tại đây..." required style="font-size: 0.9rem;"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 fw-bold py-2 shadow-sm">
+                            GỬI BÌNH LUẬN <i class="fa-solid fa-paper-plane ms-1"></i>
+                        </button>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
     </div>

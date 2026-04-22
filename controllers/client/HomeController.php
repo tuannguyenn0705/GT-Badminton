@@ -52,12 +52,45 @@ class HomeController
             exit();
         }
 
-        // Lấy các sản phẩm cùng danh mục để làm "Sản phẩm liên quan"
+        // 1. Lấy các sản phẩm liên quan
         $relatedProducts = $this->productModel->getProductsFiltered($product['category_id']);
-        
+
+        // 2. PHẦN CẦN THÊM: Lấy danh sách bình luận của sản phẩm này
+        require_once 'models/CommentModel.php'; // Gọi Model bình luận
+        $commentModel = new CommentModel();
+        $comments = $commentModel->getByProductId($id); // Lấy dữ liệu gán vào biến $comments
+
         $title = $product['name'] . ' - GT Badminton';
         $view = 'detail';
         require_once PATH_VIEW_CLIENT . 'main.php';
+    }
+
+    // Hàm xử lý gửi bình luận
+    public function addComment() {
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vui lòng đăng nhập để gửi bình luận!";
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once 'models/CommentModel.php';
+            $commentModel = new CommentModel();
+
+            $user_id = $_SESSION['user']['id'];
+            $product_id = $_POST['product_id'];
+            $content = $_POST['content'];
+
+            if (!empty(trim($content))) {
+                $commentModel->add($user_id, $product_id, $content);
+                $_SESSION['success'] = "Gửi bình luận thành công!";
+            } else {
+                $_SESSION['error'] = "Nội dung bình luận không được để trống!";
+            }
+            
+            header('Location: ' . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
     }
 }
 ?>

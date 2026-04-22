@@ -4,7 +4,9 @@ $action = $_GET['action'] ?? '/';
 
 match ($action) {
     '/'         => (new HomeController)->index(),
+    'category' => (new HomeController())->category(),   
     'detail' => (new HomeController())->detail(),
+    'add-comment'   => (new HomeController())->addComment(),
     
     // Xử lý đăng nhập
     'login'     => ($_SERVER['REQUEST_METHOD'] === 'POST') ? (new AuthController)->login() : (new AuthController)->showLogin(),
@@ -15,7 +17,7 @@ match ($action) {
     // Xử lý đăng ký
     'register'  => ($_SERVER['REQUEST_METHOD'] === 'POST') ? (new AuthController)->register() : (new AuthController)->showRegister(),
 
-    'category' => (new HomeController())->category(),
+    
 
     // CÁC ROUTE GIỎ HÀNG
     'add-to-cart' => (new CartController())->add(),
