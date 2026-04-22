@@ -15,4 +15,9 @@ match ($action) {
     'register'  => ($_SERVER['REQUEST_METHOD'] === 'POST') ? (new AuthController)->register() : (new AuthController)->showRegister(),
 
     'category' => (new HomeController())->category(),
+
+    // CÁC ROUTE GIỎ HÀNG
+    'add-to-cart' => (new CartController())->add(),
+    'view-cart'   => (new CartController())->view(),
+    'delete-cart' => (new CartController())->delete(),
 };

@@ -11,6 +11,12 @@ class AuthController
 
     public function showLogin()
     {
+        // Hứng lỗi từ Session (nếu có) và xóa nó đi
+        if (isset($_SESSION['error'])) {
+            $error = $_SESSION['error']; 
+            unset($_SESSION['error']);
+        }
+        
         require_once PATH_VIEW_CLIENT . 'login.php'; 
     }
 
@@ -87,8 +93,13 @@ class AuthController
 
     public function logout()
     {
-        session_unset();
-        session_destroy();
+        if(isset($_SESSION['user'])){
+            unset($_SESSION['user']);
+        }
+
+        // Tạo một thông báo để khách hàng biết họ đã đăng xuất
+        $_SESSION['success'] = "Đã đăng xuất tài khoản thành công!";
+        
         header('Location: ' . BASE_URL);
         exit();
     }

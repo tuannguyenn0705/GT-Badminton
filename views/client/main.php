@@ -11,23 +11,93 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        body { font-family: 'Roboto', sans-serif; background-color: #f8f9fa; }
-        .navbar { border-bottom: 2px solid #dc3545; }
-        .custom-card { transition: all 0.3s ease; border: none; border-radius: 15px; overflow: hidden; }
-        .custom-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important; }
-        .product-img-container { height: 280px; background-color: #fff; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .product-img-container img { transition: transform 0.5s ease; max-width: 90%; max-height: 90%; }
-        .custom-card:hover .product-img-container img { transform: scale(1.1); }
-        .btn-buy { border-radius: 50px; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
-        .price-new { color: #dc3545; font-size: 1.2rem; font-weight: 700; }
-        .price-old { color: #6c757d; text-decoration: line-through; font-size: 0.9rem; }
-        .carousel-item img { border-radius: 20px; }
-        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            border-bottom: 2px solid #dc3545;
+        }
+
+        .custom-card {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .custom-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .product-img-container {
+            height: 280px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-img-container img {
+            transition: transform 0.5s ease;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .custom-card:hover .product-img-container img {
+            transform: scale(1.1);
+        }
+
+        .btn-buy {
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .price-new {
+            color: #dc3545;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .price-old {
+            color: #6c757d;
+            text-decoration: line-through;
+            font-size: 0.9rem;
+        }
+
+        .carousel-item img {
+            border-radius: 20px;
+        }
+
         /* Style cho trang danh mục (category) */
-        .product-title { font-size: 0.9rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.4; height: 2.8em; }
-        .filter-sidebar .form-check-label { font-size: 0.9rem; cursor: pointer; }
-        .transition-img { transition: transform 0.3s; }
-        .custom-card:hover .transition-img { transform: scale(1.08); }
+        .product-title {
+            font-size: 0.9rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.4;
+            height: 2.8em;
+        }
+
+        .filter-sidebar .form-check-label {
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .transition-img {
+            transition: transform 0.3s;
+        }
+
+        .custom-card:hover .transition-img {
+            transform: scale(1.08);
+        }
     </style>
 </head>
 
@@ -54,6 +124,26 @@
 
                 <ul class="navbar-nav align-items-center">
                     <?php if (isset($_SESSION['user'])): ?>
+
+                        <li class="nav-item me-4 d-flex align-items-center">
+                            <a href="<?= BASE_URL ?>?action=view-cart" class="text-dark position-relative text-decoration-none">
+                                <i class="fa-solid fa-cart-shopping fs-5"></i>
+                                <?php
+                                $cartCount = 0;
+                                if (isset($_SESSION['cart'])) {
+                                    foreach ($_SESSION['cart'] as $item) {
+                                        $cartCount += $item['quantity'];
+                                    }
+                                }
+                                if ($cartCount > 0):
+                                ?>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                        <?= $cartCount ?>
+                                    </span>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+
                         <li class="nav-item me-3">
                             <span class="text-muted">Xin chào, </span>
                             <span class="fw-bold text-primary"><?= $_SESSION['user']['username'] ?></span>
@@ -66,6 +156,7 @@
                         <li class="nav-item">
                             <a href="<?= BASE_URL ?>?action=logout" class="btn btn-dark btn-sm rounded-pill px-3">Đăng xuất</a>
                         </li>
+
                     <?php else: ?>
                         <li class="nav-item"><a href="<?= BASE_URL ?>?action=login" class="nav-link fw-bold">Đăng nhập</a></li>
                         <li class="nav-item"><a href="<?= BASE_URL ?>?action=register" class="btn btn-danger btn-sm rounded-pill px-4">Đăng ký</a></li>
@@ -76,6 +167,25 @@
     </nav>
 
     <div class="flex-grow-1">
+
+        <div class="container mt-3">
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
+                    <i class="fa-solid fa-circle-check me-2"></i><strong>Thành công!</strong> <?= $_SESSION['success'] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i><strong>Lỗi!</strong> <?= $_SESSION['error'] ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <?php unset($_SESSION['error']); ?>
+            <?php endif; ?>
+        </div>
+
         <?php
         if (isset($view)) {
             require_once PATH_VIEW_CLIENT . $view . '.php';
@@ -91,4 +201,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
