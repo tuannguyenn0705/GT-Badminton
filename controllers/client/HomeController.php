@@ -22,7 +22,6 @@ class HomeController
     public function category() 
     {
         $id = $_GET['id'] ?? 0;
-        
         $category = $this->productModel->getCategoryById($id);
         
         if (!$category) {
@@ -30,7 +29,12 @@ class HomeController
             exit();
         }
 
-        $products = $this->productModel->getProductsByCategory($id);
+        // Lấy dữ liệu lọc từ URL
+        $selected_brands = $_GET['brands'] ?? [];
+        $selected_prices = $_GET['prices'] ?? [];
+
+        // Gọi hàm lọc mới ở Model
+        $products = $this->productModel->getProductsFiltered($id, $selected_brands, $selected_prices);
         
         $title = $category['name'] . ' Chính Hãng - GT Badminton';
         $view = 'category';

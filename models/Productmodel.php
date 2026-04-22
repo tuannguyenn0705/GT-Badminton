@@ -104,6 +104,37 @@ class ProductModel extends BaseModel{
         return $stmt->fetchAll();
     }
 
+    public function getProductsFiltered($category_id, $brands = [], $price_ranges = []) {
+        $sql = "SELECT p.*, pi.image_url 
+                FROM products p 
+                LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_main = 1
+                WHERE p.category_id = :category_id";
+
+        // 1. Lọc theo thương hiệu (Dùng IN)
+        if (!empty($brands)) {
+            $brandPlaceholders = implode(',', array_fill(0, count($brands), '?'));
+            $sql .= " AND p.name REGEXP '" . implode('|', $brands) . "'";
+        }
+
+        // 2. Lọc theo mức giá
+        if (!empty($price_ranges)) {
+            $priceQueries = [];
+            foreach ($price_ranges as $range) {
+                if ($range == 'under-500') $priceQueries[] = "p.price < 500000";
+                if ($range == '500-1000') $priceQueries[] = "p.price BETWEEN 500000 AND 1000000";
+                if ($range == '1000-2000') $priceQueries[] = "p.price BETWEEN 1000000 AND 2000000";
+                if ($range == '2000-3000') $priceQueries[] = "p.price BETWEEN 2000000 AND 3000000";
+                if ($range == 'over-3000') $priceQueries[] = "p.price > 3000000";
+            }
+            $sql .= " AND (" . implode(' OR ', $priceQueries) . ")";
+        }
+
+        $sql .= " ORDER BY p.id DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['category_id' => $category_id]);
+        return $stmt->fetchAll();
+    }
+
 }
 
 ?>
