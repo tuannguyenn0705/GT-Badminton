@@ -21,4 +21,11 @@ match ($action) {
     'view-cart'   => (new CartController())->view(),
     'delete-cart' => (new CartController())->delete(),
     'update-cart' => (new CartController())->update(),
+
+    // ROUTE THANH TOÁN
+    'checkout'         => (new CartController())->checkout(),
+    'process-checkout' => (new CartController())->processCheckout(),
+    'success'          => (new CartController())->success(),
+
+    'order-history' => (new CartController())->history(),
 };

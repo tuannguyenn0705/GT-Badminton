@@ -11,7 +11,6 @@ class AuthController
 
     public function showLogin()
     {
-        // Hứng lỗi từ Session (nếu có) và xóa nó đi
         if (isset($_SESSION['error'])) {
             $error = $_SESSION['error']; 
             unset($_SESSION['error']);
@@ -30,11 +29,10 @@ class AuthController
 
             if ($user && $user['password'] === $password) {
                 
-                // CHỈ THÊM ĐÚNG ĐOẠN NÀY: Kiểm tra tài khoản có bị khóa không
                 if (isset($user['status']) && $user['status'] == 0) {
                     $error = "Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ Admin.";
                     require_once PATH_VIEW_CLIENT . 'login.php';
-                    return; // Dừng lại, không cho đăng nhập
+                    return;
                 }
 
                 // Đăng nhập thành công -> Lưu thông tin vào Session
@@ -97,7 +95,6 @@ class AuthController
             unset($_SESSION['user']);
         }
 
-        // Tạo một thông báo để khách hàng biết họ đã đăng xuất
         $_SESSION['success'] = "Đã đăng xuất tài khoản thành công!";
         
         header('Location: ' . BASE_URL);

@@ -54,25 +54,34 @@ class CartController
 
         // 4. Chuyển hướng dựa theo nút bấm
         if ($is_buy_now) {
-            header('Location: ' . BASE_URL . '?action=checkout'); // Tới trang thanh toán
+            header('Location: ' . BASE_URL . '?action=checkout');
         } else {
-            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? BASE_URL)); // Trở lại trang cũ
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? BASE_URL));
         }
         exit();
     }
 
     public function view()
     {
-        $this->checkLogin(); // Chặn
+        $this->checkLogin();
+
+        // 1. Lấy dữ liệu Giỏ hàng từ Session
         $cart = $_SESSION['cart'] ?? [];
-        $title = 'Giỏ hàng của bạn';
+
+        // 2. Lấy dữ liệu Lịch sử đơn hàng từ Database
+        require_once 'models/OrderModel.php';
+        $orderModel = new OrderModel();
+        $user_id = $_SESSION['user']['id'];
+        $orders = $orderModel->getOrdersByUserId($user_id);
+
+        $title = 'Giỏ hàng & Đơn hàng của bạn';
         $view = 'cart';
         require_once PATH_VIEW_CLIENT . 'main.php';
     }
 
     public function delete()
     {
-        $this->checkLogin(); // Chặn
+        $this->checkLogin();
         $id = $_GET['id'] ?? 0;
         if (isset($_SESSION['cart'][$id])) {
             unset($_SESSION['cart'][$id]);
@@ -84,13 +93,11 @@ class CartController
 
     public function update()
     {
-        $this->checkLogin(); // Chặn bảo mật
+        $this->checkLogin();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['quantities'])) {
-            // Duyệt qua mảng số lượng gửi lên
             foreach ($_POST['quantities'] as $id => $qty) {
                 $qty = (int)$qty;
-                // Đảm bảo số lượng lớn hơn 0 và sản phẩm có trong giỏ
                 if ($qty > 0 && isset($_SESSION['cart'][$id])) {
                     $_SESSION['cart'][$id]['quantity'] = $qty;
                 }
@@ -100,6 +107,102 @@ class CartController
         
         header('Location: ' . BASE_URL . '?action=view-cart');
         exit();
+    }
+
+    // 5. Hiển thị trang Thanh toán
+    public function checkout()
+    {
+        $this->checkLogin();
+        
+        if (empty($_SESSION['cart'])) {
+            header('Location: ' . BASE_URL . '?action=view-cart');
+            exit();
+        }
+
+        $cart = $_SESSION['cart'];
+        $title = 'Thanh toán đơn hàng';
+        $view = 'checkout';
+        require_once PATH_VIEW_CLIENT . 'main.php';
+    }
+
+    // 6. Xử lý Đặt hàng (LƯU VÀO DATABASE THẬT)
+    public function processCheckout()
+    {
+        $this->checkLogin();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Lấy dữ liệu từ form checkout
+            $customer_name = $_POST['fullname'] ?? '';
+            $customer_phone = $_POST['phone'] ?? '';
+            $customer_address = $_POST['address'] ?? '';
+            $customer_email = $_SESSION['user']['email'] ?? ''; // Lấy email từ session người dùng
+            $payment_method = $_POST['payment_method'] ?? 1;
+            
+            // Lấy ID user đang đăng nhập
+            $user_id = $_SESSION['user']['id']; 
+            
+            // Tính tổng tiền
+            $total_amount = 0;
+            foreach ($_SESSION['cart'] as $item) {
+                $total_amount += $item['price'] * $item['quantity'];
+            }
+
+            // Gọi OrderModel ra để lưu DB
+            require_once 'models/OrderModel.php';
+            $orderModel = new OrderModel();
+            
+            // 1. Lưu bảng orders (đúng với cấu trúc DB của bạn)
+            $order_id = $orderModel->createOrder($user_id, $customer_name, $customer_email, $customer_phone, $customer_address, $payment_method, $total_amount);
+            
+            // 2. Lưu bảng order_details
+            foreach ($_SESSION['cart'] as $item) {
+                $orderModel->createOrderDetail($order_id, $item['id'], $item['price'], $item['quantity']);
+            }
+
+            // Xóa giỏ hàng sau khi đặt thành công
+            unset($_SESSION['cart']);
+
+            // Lưu thông tin mang sang trang Thành công
+            $_SESSION['order_success'] = [
+                'order_id' => $order_id,
+                'total_price' => $total_amount, // Giữ tên total_price để file success.php không bị lỗi hiển thị
+                'payment_method' => $payment_method
+            ];
+
+            header('Location: ' . BASE_URL . '?action=success');
+            exit();
+        }
+    }
+
+    // 7. Trang Đặt hàng thành công (Có QR Code)
+    public function success()
+    {
+        $this->checkLogin();
+        if (!isset($_SESSION['order_success'])) {
+            header('Location: ' . BASE_URL);
+            exit();
+        }
+
+        $order = $_SESSION['order_success'];
+        $title = 'Đặt hàng thành công';
+        $view = 'success';
+        require_once PATH_VIEW_CLIENT . 'main.php';
+    }
+
+    // 8. Trang Lịch sử đơn hàng
+    public function history()
+    {
+        $this->checkLogin();
+        
+        // Gọi OrderModel ra để lấy danh sách đơn
+        require_once 'models/OrderModel.php';
+        $orderModel = new OrderModel();
+        
+        $user_id = $_SESSION['user']['id'];
+        $orders = $orderModel->getOrdersByUserId($user_id);
+        
+        $title = 'Lịch sử mua hàng';
+        $view = 'history';
+        require_once PATH_VIEW_CLIENT . 'main.php';
     }
 }
 ?>
