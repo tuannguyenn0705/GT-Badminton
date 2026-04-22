@@ -43,13 +43,9 @@ class AuthController
                     'is_admin' => $user['is_admin']
                 ];
 
-                // Phân quyền điều hướng
-                if ($user['is_admin'] == 1) {
-                    header('Location: ' . BASE_URL_ADMIN); 
-                } else {
+                // Điều hướng
                     header('Location: ' . BASE_URL); 
-                }
-                exit();
+                    exit();
             } else {
                 $error = "Email hoặc mật khẩu không chính xác!";
                 require_once PATH_VIEW_CLIENT . 'login.php';
