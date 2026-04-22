@@ -24,9 +24,6 @@
     <nav class="navbar navbar-expand-xxl bg-light justify-content-center shadow-sm">
         <ul class="navbar-nav gap-3">
             <li class="nav-item">
-                <a class="nav-link text-uppercase" href="<?= BASE_URL_ADMIN ?>"><b>Dashboard</b></a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link text-uppercase text-primary" href="<?= BASE_URL_ADMIN ?>&action=categories"><b>Quản lý Danh mục</b></a>
             </li>
             <li class="nav-item">

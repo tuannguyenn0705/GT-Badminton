@@ -150,7 +150,7 @@
                         </li>
                         <?php if ($_SESSION['user']['is_admin'] == 1): ?>
                             <li class="nav-item">
-                                <a href="<?= BASE_URL_ADMIN ?>" class="btn btn-outline-danger btn-sm me-2 fw-bold">ADMIN PANEL</a>
+                            <a href="<?= BASE_URL ?>?mode=admin&action=categories" class="btn btn-outline-danger btn-sm me-2 fw-bold">ADMIN PANEL</a>
                             </li>
                         <?php endif; ?>
                         <li class="nav-item">
