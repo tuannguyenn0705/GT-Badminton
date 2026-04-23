@@ -16,7 +16,7 @@ class OrderModel extends BaseModel {
             'payment_method' => $payment_method,
             'total_amount' => $total_amount
         ]);
-        return $this->pdo->lastInsertId(); // Trả về ID của đơn hàng vừa tạo
+        return $this->pdo->lastInsertId();
     }
 
     // Lưu chi tiết từng sản phẩm trong đơn

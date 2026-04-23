@@ -47,6 +47,6 @@
 </div>
 
 <?php
-// Xóa Session sau khi hiển thị xong để f5 không bị lặp lại
+
 unset($_SESSION['order_success']);
 ?>

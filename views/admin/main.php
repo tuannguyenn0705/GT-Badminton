@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-    /* Style dùng chung cho toàn bộ Admin */
     .admin-card { border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
     .admin-card-header { background: linear-gradient(135deg, #0dcaf0 0%, #0bacce 100%); color: white; border-radius: 12px 12px 0 0 !important; padding: 15px 20px; }
     .table-custom th { color: #6c757d; font-weight: 600; text-transform: uppercase; font-size: 0.85rem; border-bottom: 2px solid #e9ecef; }

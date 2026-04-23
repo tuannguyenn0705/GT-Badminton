@@ -1,5 +1,4 @@
 <?php
-// Tự động định nghĩa Thương hiệu theo Danh mục ID
 $brand_list = [];
 if ($category['id'] == 4) $brand_list = ['Yonex', 'Lining', 'Victor', 'Mizuno', 'VSE']; // Vợt
 if ($category['id'] == 9) $brand_list = ['Yonex', 'Lining', 'Victor', 'Mizuno', 'Kawasaki']; // Giày

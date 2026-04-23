@@ -56,7 +56,6 @@ class AdminProductController
             $quantity = $_POST['quantity'] ?? 0;
             $description = trim($_POST['description'] ?? '');
 
-            // Cập nhật thông tin cơ bản
             $this->productModel->updateProduct($id, $category_id, $name, $price, $quantity, $description);
 
             // Xử lý ảnh mới nếu khách có chọn

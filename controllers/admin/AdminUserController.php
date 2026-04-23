@@ -14,7 +14,7 @@ class AdminUserController
     {
         $users = $this->userModel->getAllUsers();
         $title = 'Quản lý Tài khoản';
-        $view = 'users/index'; // Trỏ về file giao diện Cyan lúc nãy
+        $view = 'users/index';
         require_once PATH_VIEW_ADMIN . 'main.php';
     }
 

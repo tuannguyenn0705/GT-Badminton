@@ -65,10 +65,8 @@ class CartController
     {
         $this->checkLogin();
 
-        // 1. Lấy dữ liệu Giỏ hàng từ Session
         $cart = $_SESSION['cart'] ?? [];
 
-        // 2. Lấy dữ liệu Lịch sử đơn hàng từ Database
         require_once 'models/OrderModel.php';
         $orderModel = new OrderModel();
         $user_id = $_SESSION['user']['id'];
@@ -130,23 +128,20 @@ class CartController
     {
         $this->checkLogin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lấy dữ liệu từ form checkout
+
             $customer_name = $_POST['fullname'] ?? '';
             $customer_phone = $_POST['phone'] ?? '';
             $customer_address = $_POST['address'] ?? '';
             $customer_email = $_SESSION['user']['email'] ?? ''; // Lấy email từ session người dùng
             $payment_method = $_POST['payment_method'] ?? 1;
             
-            // Lấy ID user đang đăng nhập
             $user_id = $_SESSION['user']['id']; 
             
-            // Tính tổng tiền
             $total_amount = 0;
             foreach ($_SESSION['cart'] as $item) {
                 $total_amount += $item['price'] * $item['quantity'];
             }
 
-            // Gọi OrderModel ra để lưu DB
             require_once 'models/OrderModel.php';
             $orderModel = new OrderModel();
             
@@ -164,7 +159,7 @@ class CartController
             // Lưu thông tin mang sang trang Thành công
             $_SESSION['order_success'] = [
                 'order_id' => $order_id,
-                'total_price' => $total_amount, // Giữ tên total_price để file success.php không bị lỗi hiển thị
+                'total_price' => $total_amount,
                 'payment_method' => $payment_method
             ];
 
@@ -193,7 +188,6 @@ class CartController
     {
         $this->checkLogin();
         
-        // Gọi OrderModel ra để lấy danh sách đơn
         require_once 'models/OrderModel.php';
         $orderModel = new OrderModel();
         

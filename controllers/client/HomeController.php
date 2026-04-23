@@ -29,11 +29,9 @@ class HomeController
             exit();
         }
 
-        // Lấy dữ liệu lọc từ URL
         $selected_brands = $_GET['brands'] ?? [];
         $selected_prices = $_GET['prices'] ?? [];
 
-        // Gọi hàm lọc mới ở Model
         $products = $this->productModel->getProductsFiltered($id, $selected_brands, $selected_prices);
         
         $title = $category['name'] . ' Chính Hãng - GT Badminton';
@@ -52,13 +50,11 @@ class HomeController
             exit();
         }
 
-        // 1. Lấy các sản phẩm liên quan
         $relatedProducts = $this->productModel->getProductsFiltered($product['category_id']);
 
-        // 2. PHẦN CẦN THÊM: Lấy danh sách bình luận của sản phẩm này
-        require_once 'models/CommentModel.php'; // Gọi Model bình luận
+        require_once 'models/CommentModel.php';
         $commentModel = new CommentModel();
-        $comments = $commentModel->getByProductId($id); // Lấy dữ liệu gán vào biến $comments
+        $comments = $commentModel->getByProductId($id);
 
         $title = $product['name'] . ' - GT Badminton';
         $view = 'detail';
